@@ -12,10 +12,6 @@ export default function App() {
   const [tags, setTags] = useState('');
   const [showModal, setShowModal] = useState(false);
 
-  function handleSubmit(searchQuery) {
-    setSearchQuery(searchQuery);
-  }
-
   function toggleModal() {
     setShowModal(!showModal);
   }
@@ -27,7 +23,7 @@ export default function App() {
 
   return (
     <Wrapper>
-      <Searchbar onSubmit={handleSubmit} searchQuery={searchQuery} />
+      <Searchbar onSubmit={setSearchQuery} searchQuery={searchQuery} />
       <ImageGallery
         onCardClick={onCardClick}
         searchQuery={searchQuery}
