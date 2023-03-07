@@ -68,4 +68,4 @@ SearchBar.propTypes = {
   setIsBtnLoadMoreVisible: PropTypes.func.isRequired,
   resetPage: PropTypes.func.isRequired,
   resetImages: PropTypes.func.isRequired,
-}
+};
