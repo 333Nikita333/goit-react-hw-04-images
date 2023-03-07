@@ -20,15 +20,13 @@ export default function ImageGallery({
   onOpenModal,
 }) {
   const [status, setStatus] = useState(Status.IDLE);
-  const [setError] = useState(null);
   const [page, setPage] = useState(1);
   const [images, setImages] = useState([]);
   const [totalHits, setTotalHits] = useState(null);
 
   useEffect(() => {
-    if (searchQuery === '') {
-      return;
-    }
+    if (searchQuery === '') return;
+    
     setStatus(Status.PENDING);
 
     fetchImagesByName(page, searchQuery)
@@ -56,11 +54,10 @@ export default function ImageGallery({
           toast.error(`Sorry we have nothing more to show you.`);
         }
       })
-      .catch(error => {
-        setError(error);
+      .catch(() => {
         setStatus(Status.REJECTED);
       });
-  }, [page, searchQuery, setError]);
+  }, [page, searchQuery]);
 
   function onBtnLoadMore() {
     setPage(prevPage => prevPage + 1);

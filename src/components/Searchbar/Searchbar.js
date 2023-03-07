@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { GoSearch } from 'react-icons/go';
 import { toast } from 'react-toastify';
@@ -9,65 +9,51 @@ import {
   SearchForm,
 } from './Searchbar.styled';
 
-class SearchBar extends Component {
-  state = {
-    newSearchQuery: '',
-  };
+export default function SearchBar({ searchQuery, onSubmit }) {
+  const [newSearchQuery, setNewSearchQuery] = useState('');
 
-  handleChange = e => {
-    this.setState({
-      newSearchQuery: e.currentTarget.value.trim(),
-    });
-  };
+  function handleChange(e) {
+    setNewSearchQuery(e.currentTarget.value.trim());
+  }
 
-  handleSubmit = e => {
+  function handleSubmit(e) {
     e.preventDefault();
 
-    const newImageQuery = this.state.newSearchQuery;
-
-    if (newImageQuery === '') {
+    if (newSearchQuery === '') {
       return toast.warning('Please enter a search term');
     }
 
-    if (newImageQuery === this.props.searchQuery) {
+    if (newSearchQuery === searchQuery) {
       toast.info('Enter another request');
     }
 
-    if (newImageQuery !== this.props.searchQuery) {
-      this.props.onSubmit(newImageQuery);
-      this.setState({
-        newSearchQuery: '',
-      });
+    if (newSearchQuery !== searchQuery) {
+      onSubmit(newSearchQuery);
+      setNewSearchQuery('');
     }
-  };
-
-  render() {
-    const { newSearchQuery } = this.state;
-
-    return (
-      <SearchbarBox>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <SearchButton type="submit">
-            <GoSearch />
-          </SearchButton>
-
-          <SearchbarInput
-            type="text"
-            autocomplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={newSearchQuery}
-            onChange={this.handleChange}
-          />
-        </SearchForm>
-      </SearchbarBox>
-    );
   }
+
+  return (
+    <SearchbarBox>
+      <SearchForm onSubmit={handleSubmit}>
+        <SearchButton type="submit">
+          <GoSearch />
+        </SearchButton>
+
+        <SearchbarInput
+          type="text"
+          autocomplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={newSearchQuery}
+          onChange={handleChange}
+        />
+      </SearchForm>
+    </SearchbarBox>
+  );
 }
 
 SearchBar.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
-
-export default SearchBar;

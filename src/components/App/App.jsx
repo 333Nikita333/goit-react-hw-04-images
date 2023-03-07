@@ -30,9 +30,7 @@ export default function App() {
         onOpenModal={toggleModal}
       />
       {showModal && (
-        <Modal onCloseModal={toggleModal}>
-          {<img src={imgUrl} alt={tags} />}
-        </Modal>
+        <Modal onCloseModal={toggleModal} imgUrl={imgUrl} tags={tags} />
       )}
       <ToastContainer autoClose={3000} theme="dark" />
     </Wrapper>
