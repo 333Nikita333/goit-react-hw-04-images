@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { ModalBox, Overlay } from './Modal.styled';
-import PropTypes from 'prop-types';
 
 const modalRoot = document.querySelector('#modal-root');
 
@@ -13,10 +13,9 @@ export default function Modal({ onCloseModal, imgUrl, tags }) {
       }
     }
     window.addEventListener('keydown', handleEscDown);
-    console.log("открылась модалка")
+    
     return () => {
       window.removeEventListener('keydown', handleEscDown);
-      console.log("зыкрылась модалка")
     };
   }, [onCloseModal]);
 
@@ -38,5 +37,6 @@ export default function Modal({ onCloseModal, imgUrl, tags }) {
 
 Modal.propTypes = {
   onCloseModal: PropTypes.func.isRequired,
-  children: PropTypes.node,
+  imgUrl: PropTypes.string.isRequired,
+  tags:PropTypes.string.isRequired,
 };

@@ -1,7 +1,8 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { GoSearch } from 'react-icons/go';
+import { ErrorMessage, Formik } from 'formik';
+import { object, string } from 'yup';
 import { toast } from 'react-toastify';
+import { GoSearch } from 'react-icons/go';
 import {
   SearchbarBox,
   SearchbarInput,
@@ -9,51 +10,62 @@ import {
   SearchForm,
 } from './Searchbar.styled';
 
-export default function SearchBar({ searchQuery, onSubmit }) {
-  const [newSearchQuery, setNewSearchQuery] = useState('');
+const initialValues = { query: '' };
+const userSchema = object({ query: string() });
 
-  function handleChange(e) {
-    setNewSearchQuery(e.currentTarget.value.trim());
-  }
+export default function SearchBar({
+  searchQuery,
+  setSearchQuery,
+  setIsBtnLoadMoreVisible,
+  resetPage,
+  resetImages,
+}) {
+  function handleSubmit({ query }, { resetForm }) {
+    const currentQuery = query.trim();
 
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    if (newSearchQuery === '') {
-      return toast.warning('Please enter a search term');
+    if (currentQuery === '') {
+      toast.warning('Please enter your request');
+      return;
     }
-
-    if (newSearchQuery === searchQuery) {
-      toast.info('Enter another request');
-    }
-
-    if (newSearchQuery !== searchQuery) {
-      onSubmit(newSearchQuery);
-      setNewSearchQuery('');
+    if (searchQuery !== currentQuery && currentQuery !== '') {
+      setSearchQuery(query);
+      setIsBtnLoadMoreVisible(true);
+      resetPage(1);
+      resetImages([]);
+      resetForm();
     }
   }
 
   return (
     <SearchbarBox>
-      <SearchForm onSubmit={handleSubmit}>
-        <SearchButton type="submit">
-          <GoSearch />
-        </SearchButton>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={userSchema}
+      >
+        <SearchForm>
+          <SearchButton type="submit">
+            <GoSearch />
+          </SearchButton>
 
-        <SearchbarInput
-          type="text"
-          autocomplete="off"
-          autoFocus
-          placeholder="Search images and photos"
-          value={newSearchQuery}
-          onChange={handleChange}
-        />
-      </SearchForm>
+          <SearchbarInput
+            type="text"
+            name="query"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+          />
+          <ErrorMessage name="query" />
+        </SearchForm>
+      </Formik>
     </SearchbarBox>
   );
 }
 
 SearchBar.propTypes = {
   searchQuery: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-};
+  setSearchQuery: PropTypes.func.isRequired,
+  setIsBtnLoadMoreVisible: PropTypes.func.isRequired,
+  resetPage: PropTypes.func.isRequired,
+  resetImages: PropTypes.func.isRequired,
+}
